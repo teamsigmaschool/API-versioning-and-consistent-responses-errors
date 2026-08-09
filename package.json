@@ -1,0 +1,20 @@
+{
+  "name": "mini-blog",
+  "version": "1.0.0",
+  "description": "ABC (All Blog Center) - Mission 9 Ch1 companion codebase. Started as Mission 8 Ch6 Project 3, migrated to Supabase Auth in this snapshot.",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.112.2",
+    "cors": "^2.8.6",
+    "dotenv": "^16.6.1",
+    "express": "^4.22.2",
+    "pg": "^8.22.0"
+  },
+  "devDependencies": {
+    "node-fetch": "^3.3.2",
+    "pg-mem": "^3.0.14"
+  }
+}
