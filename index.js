@@ -121,9 +121,9 @@ async function loginV2(req, res, next) {
 async function getAllPostsV1(req, res) {
   try {
     const result = await pool.query(
-      `SELECT posts.id, posts.title, posts.content, posts.created_at, users.username AS author
-       FROM posts JOIN users ON posts.user_id = users.id
-       ORDER BY posts.created_at DESC`
+      `SELECT abc_posts.id, abc_posts.title, abc_posts.content, abc_posts.created_at, abc_users.username AS author
+       FROM abc_posts JOIN abc_users ON abc_posts.user_id = abc_users.id
+       ORDER BY abc_posts.created_at DESC`
     );
     res.json(result.rows);
   } catch (err) {
@@ -134,10 +134,10 @@ async function getAllPostsV1(req, res) {
 async function getAllPostsV2(req, res, next) {
   try {
     const result = await pool.query(
-      `SELECT posts.id, posts.title, posts.content, posts.created_at,
-              users.id AS author_id, users.username AS author_username
-       FROM posts JOIN users ON posts.user_id = users.id
-       ORDER BY posts.created_at DESC`
+      `SELECT abc_posts.id, abc_posts.title, abc_posts.content, abc_posts.created_at,
+              abc_users.id AS author_id, abc_users.username AS author_username
+       FROM abc_posts JOIN abc_users ON abc_posts.user_id = abc_users.id
+       ORDER BY abc_posts.created_at DESC`
     );
     sendSuccess(res, result.rows, { count: result.rows.length });
   } catch (err) {
@@ -150,7 +150,7 @@ async function createPostV1(req, res) {
   const { title, content } = req.body;
   try {
     const result = await pool.query(
-      'INSERT INTO posts (title, content, user_id) VALUES ($1, $2, $3) RETURNING *',
+      'INSERT INTO abc_posts (title, content, user_id) VALUES ($1, $2, $3) RETURNING *',
       [title, content, req.user.userId]
     );
     res.status(201).json(result.rows[0]);
@@ -163,7 +163,7 @@ async function createPostV2(req, res, next) {
   const { title, content } = req.body;
   try {
     const result = await pool.query(
-      'INSERT INTO posts (title, content, user_id) VALUES ($1, $2, $3) RETURNING *',
+      'INSERT INTO abc_posts (title, content, user_id) VALUES ($1, $2, $3) RETURNING *',
       [title, content, req.user.userId]
     );
     sendSuccess(res, result.rows[0], {}, 201);
@@ -177,7 +177,7 @@ async function updatePostV1(req, res) {
   const { title, content } = req.body;
   try {
     const result = await pool.query(
-      `UPDATE posts SET title = COALESCE($1, title), content = COALESCE($2, content)
+      `UPDATE abc_posts SET title = COALESCE($1, title), content = COALESCE($2, content)
        WHERE id = $3 AND user_id = $4 RETURNING *`,
       [title, content, req.params.id, req.user.userId]
     );
@@ -194,7 +194,7 @@ async function updatePostV2(req, res, next) {
   const { title, content } = req.body;
   try {
     const result = await pool.query(
-      `UPDATE posts SET title = COALESCE($1, title), content = COALESCE($2, content)
+      `UPDATE abc_posts SET title = COALESCE($1, title), content = COALESCE($2, content)
        WHERE id = $3 AND user_id = $4 RETURNING *`,
       [title, content, req.params.id, req.user.userId]
     );
@@ -211,7 +211,7 @@ async function updatePostV2(req, res, next) {
 async function deletePostV1(req, res) {
   try {
     const result = await pool.query(
-      'DELETE FROM posts WHERE id = $1 AND user_id = $2 RETURNING *',
+      'DELETE FROM abc_posts WHERE id = $1 AND user_id = $2 RETURNING *',
       [req.params.id, req.user.userId]
     );
     if (result.rows.length === 0) {
@@ -226,7 +226,7 @@ async function deletePostV1(req, res) {
 async function deletePostV2(req, res, next) {
   try {
     const result = await pool.query(
-      'DELETE FROM posts WHERE id = $1 AND user_id = $2 RETURNING *',
+      'DELETE FROM abc_posts WHERE id = $1 AND user_id = $2 RETURNING *',
       [req.params.id, req.user.userId]
     );
     if (result.rows.length === 0) {
@@ -242,7 +242,7 @@ async function deletePostV2(req, res, next) {
 async function forceDeletePostV1(req, res) {
   try {
     const result = await pool.query(
-      'DELETE FROM posts WHERE id = $1 RETURNING *',
+      'DELETE FROM abc_posts WHERE id = $1 RETURNING *',
       [req.params.id]
     );
     if (result.rows.length === 0) {
@@ -257,7 +257,7 @@ async function forceDeletePostV1(req, res) {
 async function forceDeletePostV2(req, res, next) {
   try {
     const result = await pool.query(
-      'DELETE FROM posts WHERE id = $1 RETURNING *',
+      'DELETE FROM abc_posts WHERE id = $1 RETURNING *',
       [req.params.id]
     );
     if (result.rows.length === 0) {
